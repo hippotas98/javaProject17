@@ -1,8 +1,5 @@
 package application;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+import java.util.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import mygraph.graph.Arrow;
@@ -18,6 +15,18 @@ import analyst.ClassADT;
 import analyst.InterfaceADT;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import java.io.File;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 
 
 public class Main extends Application {
@@ -26,32 +35,63 @@ public class Main extends Application {
 	Graph graph = new Graph();
 	@Override
 	public void start(Stage primaryStage) {
-        BorderPane root = new BorderPane();
-        
-        graph = new Graph();
-        
-        root.setCenter(graph.getScrollPane());
-
-        Scene scene = new Scene(root, 1024, 768);
-        //scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-        
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        String folderPath = "/Users/apple/Documents/Git/JavaProject/JavaProjectOOP/example project/abc";
-        
-        getClassInformation(folderPath);
-        addGraphComponents();
-
-        Layout layout = new RandomLayout(graph);
-        
-        List<Cell> cells = graph.getModel().getAllCells();
-		
-        Random rnd = new Random();
-        for (Cell cell : cells) {
-			double x = rnd.nextDouble() * 500;
-			double y = rnd.nextDouble() * 500;
-			cell.relocate(x,  y);
-		}
+        final DirectoryChooser directoryChooser = new DirectoryChooser();
+	       configuringDirectoryChooser(directoryChooser);
+	       TextArea textArea = new TextArea();
+	       textArea.setMinHeight(70);
+	       Button button = new Button("Open DirectoryChooser and select a directory");
+	       VBox root1 = new VBox();
+	       root1.setPadding(new Insets(10));
+	       root1.setSpacing(5);
+	       //File a = new File(".");
+	       button.setOnAction(new EventHandler<ActionEvent>() {
+	           @Override
+	           public void handle(ActionEvent event) {
+	               File dir = directoryChooser.showDialog(primaryStage);
+	               if (dir != null) {
+	            	   	   String folderPath = dir.getAbsolutePath();
+	            	   	   List<String> lsFile = new ArrayList<String>();
+	            	   	   if( (lsFile = Utils.readFileName(folderPath, lsFile)).size()==0)
+	            	   	   {
+	            	   		   Text error = new Text("No java file!!");
+	            	   		   VBox verror = new VBox();
+	            	   		   verror.setSpacing(5);
+	            	   		   verror.getChildren().addAll(error);
+	            	   		   Scene serror = new Scene(verror,200,50);
+	            	   		   primaryStage.setScene(serror);
+	            	   		   primaryStage.show();
+	            	   	   }
+	            	   	   else {
+	            	   		   BorderPane root = new BorderPane();
+		            	   	   graph = new Graph();
+		           	    	   Scene scene = new Scene(root, 1024, 768);
+		           	    	   root.setCenter(graph.getScrollPane());
+		         
+		           	    	   primaryStage.setScene(scene);
+		           	    	   primaryStage.show();
+		           	    	   getClassInformation(folderPath);
+		           	    	   addGraphComponents();
+		           	    	   Layout layout = new RandomLayout(graph);
+		           	    	   List<Cell> cells = graph.getModel().getAllCells();
+		           	    	   Random rnd = new Random();
+		           	    	   for (Cell cell : cells) {
+		           	    		   double x = rnd.nextDouble() * 500;
+		           	    		   double y = rnd.nextDouble() * 500;
+		           	    		   cell.relocate(x,  y);
+		           	    	   }  
+	            	   	   } 
+	               }
+	           	   else {
+	                   textArea.setText(null);
+	               }
+	           }
+	       });
+	       Text program = new Text("Phan tich ma nguon");
+	       root1.getChildren().addAll(program, button);
+	       Scene scene1 = new Scene(root1, 400, 200);
+	       primaryStage.setTitle("Select Directory");
+	       primaryStage.setScene(scene1);
+	    	   primaryStage.show();
 	}
 	
 	private void addGraphComponents() {
@@ -98,6 +138,12 @@ public class Main extends Application {
 			//index++;
 		}
 		classes = ClassADT.checkName(classes);
+	}
+	private void configuringDirectoryChooser(DirectoryChooser directoryChooser) {
+	       // Set tiêu đề cho DirectoryChooser
+	       directoryChooser.setTitle("Select Some Directories");
+	       // Sét thư mục bắt đầu nhìn thấy khi mở DirectoryChooser
+	       directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 	}
 	public static void main(String[] args) {
 		launch(args);
