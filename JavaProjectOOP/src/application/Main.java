@@ -32,6 +32,8 @@ import javafx.stage.Stage;
 public class Main extends Application {
 	List<List<String>> classInfor = new ArrayList<List<String>>();
 	List<ClassADT> classes = new ArrayList<ClassADT>();
+	List<List<String>> interfaceInfor = new ArrayList<List<String>>();
+	List<InterfaceADT> interfaces = new ArrayList<InterfaceADT>();
 	Graph graph = new Graph();
 	@Override
 	public void start(Stage primaryStage) {
@@ -43,13 +45,12 @@ public class Main extends Application {
 	       VBox root1 = new VBox();
 	       root1.setPadding(new Insets(10));
 	       root1.setSpacing(5);
-	       //File a = new File(".");
 	       button.setOnAction(new EventHandler<ActionEvent>() {
 	           @Override
 	           public void handle(ActionEvent event) {
 	               File dir = directoryChooser.showDialog(primaryStage);
 	               if (dir != null) {
-	            	   	   String folderPath = dir.getAbsolutePath();
+	            	   	   String folderPath = dir.getAbsolutePath(); /*"/Users/apple/Documents/Git/javaProject17/JavaProjectOOP/example project/abc"*/;
 	            	   	   List<String> lsFile = new ArrayList<String>();
 	            	   	   if( (lsFile = Utils.readFileName(folderPath, lsFile)).size()==0)
 	            	   	   {
@@ -66,9 +67,9 @@ public class Main extends Application {
 		            	   	   graph = new Graph();
 		           	    	   Scene scene = new Scene(root, 1024, 768);
 		           	    	   root.setCenter(graph.getScrollPane());
-		         
 		           	    	   primaryStage.setScene(scene);
 		           	    	   primaryStage.show();
+		           	    	   getInterfaceInformation(folderPath);
 		           	    	   getClassInformation(folderPath);
 		           	    	   addGraphComponents();
 		           	    	   Layout layout = new RandomLayout(graph);
@@ -96,6 +97,7 @@ public class Main extends Application {
 	
 	private void addGraphComponents() {
 		Model model = graph.getModel();
+		//add class
 		for(ClassADT cls : classes) {
 			String name = cls.getPack()+"."+cls.getName();
 			if(name.contains(" ("))
@@ -111,15 +113,65 @@ public class Main extends Application {
 			else {
 				pName = cls.getSuperClass();
 			}
-			//System.out.println(pName + "   " + cls.getName());
 			if(!pName.equals("null")) {
 				String name =  cls.getPack()+"."+cls.getName();
 				if(name.contains(" ("))
 					name = name.substring(0,name.indexOf(" ("));
-				model.addEdge(pName,name);
+				model.addEdge(name, pName);
+			}
+		}
+		//add interface
+		for(InterfaceADT intface : interfaces) {
+			String name = intface.getPack()+"."+intface.getName();
+			if(name.contains(" ("))
+				name = name.substring(0, name.indexOf(" ("));
+			model.addCell(name, intface, CellType.RECTANGLE);
+		}
+		for(ClassADT cls : classes) {
+			List<String> lsInterface = cls.getInterfaces();
+			String name = cls.getPack()+"."+cls.getName();
+			if(name.contains(" ("))
+				name = name.substring(0, name.indexOf(" ("));
+			if(lsInterface.size()!=0) {
+				for(String i : lsInterface) {
+					if(i.contains(".")) {
+						model.addEdge(name, i);
+					}
+					else {
+						model.addEdge(name, cls.getPack()+"."+i);
+					}
+				}
+			}
+		}
+		for(InterfaceADT intface : interfaces) {
+			List<String> lsinterfaces = intface.getInterfaces();
+			String name = intface.getPack()+"."+intface.getName();
+			if(name.contains(" ("))
+				name = name.substring(0, name.indexOf(" ("));
+			if(lsinterfaces.size()!=0) {
+				for(String i : lsinterfaces) {
+					if(i.contains(".")) {
+						model.addEdge(name, i);
+					}
+					else {
+						model.addEdge(name, intface.getPack()+"."+i);
+					}
+				}
 			}
 		}
 		graph.endUpdate();
+	}
+	private void getInterfaceInformation(String filePath) {
+		InterfaceADT.getInterfacesContent(filePath);
+		InterfaceADT.getInterfacesName();
+		for(String content : InterfaceADT.lsInterface) {
+			int indx = InterfaceADT.lsInterface.indexOf(content);
+			String name = InterfaceADT.lsInterface_name.get(indx);
+			InterfaceADT itface = InterfaceADT.createInterface(content, name, indx);
+			interfaceInfor.add(itface.getInformation());
+			interfaces.add(itface);
+		}
+		interfaces = InterfaceADT.checkName(interfaces);
 	}
 	private void getClassInformation(String filePath) {
 		String path = filePath;
@@ -131,14 +183,11 @@ public class Main extends Application {
 			String Cname = ClassADT.lsClass_name.get(indx);
 			ClassADT clas = ClassADT.createClassADT(content, Cname, indx);
 			classes.add(clas);
-			//ImageUtils.createImagefromString(clas.getInformation(), Cname);
-			List<String> ls = clas.getInformation();
 			classInfor.add(clas.getInformation());
-			//System.out.println(clas.getPack()+" " + clas.getName());
-			//index++;
 		}
 		classes = ClassADT.checkName(classes);
 	}
+	
 	private void configuringDirectoryChooser(DirectoryChooser directoryChooser) {
 	       // Set tiêu đề cho DirectoryChooser
 	       directoryChooser.setTitle("Select Some Directories");

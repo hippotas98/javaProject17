@@ -57,8 +57,8 @@ public class ClassADT {
 		CompilationUnit cu = Utils.generateAST(content);
 		List<String> method = new ArrayList<String>();
 		List<String> variables = new ArrayList<String>();
-		List<String> lsInterface = InterfaceADT.lsInterface_name;
-		List<String> interfaces = InterfaceADT.getInterfaces(lsInterface, content);
+		//List<String> lsInterface = InterfaceADT.lsInterface_name;
+		List<String> interfaces = new ArrayList<String>();
 		List<String> hasaClass = new ArrayList<String>();
 		List<String> innerclass = new ArrayList<String>();
 		boolean abs = false;
@@ -71,8 +71,9 @@ public class ClassADT {
 		clas.setVariable(cu);
 		clas.setMethod(cu);
 		clas.setInnerclass(cu);
-		clas.setPackageName(cu);
+		clas.setPackageName();
 		clas.hasaFind();
+		clas.interfaces = InterfaceADT.getInterfaces(cu,clas.name);
 		return clas;
 	}
 	void setVariable(CompilationUnit cu){
@@ -163,7 +164,7 @@ public class ClassADT {
 							{
 								method = "abstract ";
 							}
-							method += type + " " + name + para_name;
+							method += modifier + type + " " + name + para_name;
 						}
 						if(node.getParent() instanceof TypeDeclaration){
 							TypeDeclaration parent = (TypeDeclaration) node.getParent();
@@ -280,7 +281,7 @@ public class ClassADT {
 		infor.add("");
 		return infor;
 	}
-	void setPackageName(CompilationUnit cu) {
+	void setPackageName() {
 		int indx = indexofClass;
 		String firstLine = lsClass.get(indx).substring(0,lsClass.get(indx).indexOf("{"));
 		firstLine = firstLine.split(" ")[0];

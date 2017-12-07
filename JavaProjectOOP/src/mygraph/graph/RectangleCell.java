@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.shape.Line;
 import analyst.ClassADT;
+import analyst.InterfaceADT;
 public class RectangleCell extends Cell {
 	
 	public RectangleCell(String _id, ClassADT clas ,int width, int height) {
@@ -33,6 +34,24 @@ public class RectangleCell extends Cell {
 		String method = getMethod(clas);
 		Text tMethod = new Text(method);
 		Rectangle rMethod = new Rectangle(rname.getLayoutX(),rVar.getY()+rVar.getHeight(),width,count(method,"\n")*16);
+		drawRec(tMethod,rMethod);
+	}
+	public RectangleCell(String _id, InterfaceADT intface ,int width, int height) {
+		super(_id);
+		Text name = new Text(intface.getName());
+		name.setTranslateY(6);
+		name.setTranslateX(width/2-intface.getName().length()*4);
+		Rectangle rname = new Rectangle(width,28);
+		rname.setStroke(Color.BLACK);
+		rname.setFill(Color.WHITE);
+		StackPane sname = new StackPane();
+		//sname.setAlignment(name, Pos.CENTER);
+		sname.getChildren().addAll(rname, name);
+		setView(rname);
+		setView(sname);
+		String method = getMethod(intface);
+		Text tMethod = new Text(method);
+		Rectangle rMethod = new Rectangle(rname.getLayoutX(),rname.getLayoutY()+rname.getHeight(),width,count(method,"\n")*16);
 		drawRec(tMethod,rMethod);
 	}
 	private void drawRec(Text text, Rectangle r) {
@@ -59,6 +78,14 @@ public class RectangleCell extends Cell {
 	String getMethod(ClassADT clas) {
 		StringBuilder sb = new StringBuilder();
 		for(String i : clas.getMethod()) {
+			sb.append(i);
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
+	String getMethod(InterfaceADT itf) {
+		StringBuilder sb = new StringBuilder();
+		for(String i : itf.getMethods()) {
 			sb.append(i);
 			sb.append("\n");
 		}

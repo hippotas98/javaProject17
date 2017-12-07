@@ -13,7 +13,7 @@ public class Utils{
         		String pack = getPackName(file);
         		try(BufferedReader in = new BufferedReader(new FileReader(file))) {
                 while((line=in.readLine())!=null){
-                		if(line.contains("class")) {
+                		if(line.contains("class")||line.contains("interface")) {
                 			StringBuilder linewithPackage = new StringBuilder(")");
                 			linewithPackage.append(pack);
                 			linewithPackage.append(" ");

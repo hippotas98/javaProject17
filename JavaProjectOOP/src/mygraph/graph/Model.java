@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import analyst.ClassADT;
+import analyst.InterfaceADT;
 import mygraph.graph.Cell;
 
 
@@ -92,6 +93,30 @@ public class Model {
 			width = max*8;
 			height = length*15;
 			RectangleCell rectangleCell = new RectangleCell(id,clas,width,height);
+			addCell(rectangleCell);
+			break;		
+		
+			default:
+				throw new UnsupportedOperationException("Unsupported type " + type);
+		}
+	}
+	public void addCell(String id, InterfaceADT itf, CellType type) {
+		
+		switch (type) {
+		
+		case RECTANGLE:
+			int width = 0;
+			int height = 0;
+			int max = 0;
+			int length = 0;
+			List<String> content = itf.getInformation();
+			for(String line : content) {
+				if(line.length() > max) max = line.length();
+				length++;
+			}
+			width = max*8;
+			height = length*15;
+			RectangleCell rectangleCell = new RectangleCell(id,itf,width,height);
 			addCell(rectangleCell);
 			break;		
 		

@@ -33,6 +33,10 @@ interface h2
 {
 void print();
 }
+interface h3 extends h2{
+	void print();
+	void draw();
+}
 class Person 
 {
     int age;
@@ -110,7 +114,7 @@ class Student extends Person{
         this.Class = Class;
     }
 }
-class Animal extends Cau1
+class Animal extends Cau1 implements h2,hello
 {
     String gender;
     int leg;
@@ -125,6 +129,12 @@ class Animal extends Cau1
     }
     public void setGender(String gender) {
         this.gender = gender;
+    }
+    public void print() {
+    	
+    }
+    public void draw() {
+    	
     }
 }
 class Cat extends Animal{
@@ -188,13 +198,6 @@ class Bird extends Animal{
     			int b;
     		}
     }
-    hello h = new hello() {
-    		public void 
-    		draw() 
-    		{
-    			System.out.println(1);
-    		}
-    };
     BabyBird n = new BabyBird();
 }
 abstract class h1 extends Bird {
