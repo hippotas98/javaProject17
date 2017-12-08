@@ -50,7 +50,7 @@ public class Main extends Application {
 	           public void handle(ActionEvent event) {
 	               File dir = directoryChooser.showDialog(primaryStage);
 	               if (dir != null) {
-	            	   	   String folderPath = dir.getAbsolutePath(); /*"/Users/apple/Documents/Git/javaProject17/JavaProjectOOP/example project/abc"*/;
+	            	   	   String folderPath = /*dir.getAbsolutePath();*/ "/Users/apple/Documents/Git/javaProject17/JavaProjectOOP/example project/abc";
 	            	   	   List<String> lsFile = new ArrayList<String>();
 	            	   	   if( (lsFile = Utils.readFileName(folderPath, lsFile)).size()==0)
 	            	   	   {

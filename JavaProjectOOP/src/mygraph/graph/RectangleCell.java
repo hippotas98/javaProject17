@@ -38,10 +38,11 @@ public class RectangleCell extends Cell {
 	}
 	public RectangleCell(String _id, InterfaceADT intface ,int width, int height) {
 		super(_id);
-		Text name = new Text(intface.getName());
-		name.setTranslateY(6);
-		name.setTranslateX(width/2-intface.getName().length()*4);
-		Rectangle rname = new Rectangle(width,28);
+		String intfaceName = "<<interface>>\n\t"+intface.getName();
+		Text name = new Text(intfaceName);
+		name.setTranslateY(1);
+		name.setTranslateX(5);
+		Rectangle rname = new Rectangle(width,30);
 		rname.setStroke(Color.BLACK);
 		rname.setFill(Color.WHITE);
 		StackPane sname = new StackPane();
