@@ -72,7 +72,7 @@ public class ClassADT {
 		clas.setMethod(cu);
 		clas.setInnerclass(cu);
 		clas.setPackageName();
-		clas.hasaFind();
+		//clas.hasaFind();
 		clas.interfaces = InterfaceADT.getInterfaces(cu,clas.name);
 		return clas;
 	}
@@ -227,23 +227,35 @@ public class ClassADT {
 	}
 	public void hasaFind(){
 		for(String variable : variables){
-			String type = variable.split(" ")[0];
+			String [] split = variable.split(" ");
+			String type = split[split.length-1];
 			for(String clas : lsClass_name){
+				String claspack = "";
+				if(clas.contains("(")) {
+					claspack = clas.substring(clas.indexOf("(")+1,clas.indexOf(")"));
+					clas = clas.substring(0,clas.indexOf(" ("));
+				}
+				//hasaClass.add(type);
 				if(clas.equals(type)){
 					hasaClass.add(clas);
 				}
-			}
-			for(String cls : this.innerclass) {
-				if(!cls.equals("null")) {
-					if(cls.equals(type)) {
-						hasaClass.add(cls);
+				if(type.contains(".")) {
+					if(type.equals(claspack+"."+clas)) {
+						hasaClass.add(type);
 					}
 				}
 			}
+//			for(String cls : this.innerclass) {
+//				if(!cls.equals("null")) {
+//					if(cls.equals(type)) {
+//						hasaClass.add(cls);
+//					}
+//				}
+//			}
 		}
-		if(hasaClass.size()==0){
-			hasaClass.add("null");
-		}
+	}
+	public List<String> getHasAClass() {
+		return hasaClass;
 	}
 	void setInnerclass(CompilationUnit cu)
 	{
@@ -252,12 +264,6 @@ public class ClassADT {
 				if(!node.isPackageMemberTypeDeclaration()){
 					innerclass.add(node.getName().toString());
 				}
-				return true;
-			}
-			public boolean visit(AnonymousClassDeclaration node){
-				String name = "Anonymous ";
-				name = name + node.toString();
-				innerclass.add(name);
 				return true;
 			}
 		});
@@ -291,6 +297,8 @@ public class ClassADT {
 		for(int i = 0;i<classes.size()-1;++i) {
 			for(int j = i+1;j<classes.size();++j) {
 				if(classes.get(i).getName().equals(classes.get(j).getName())) {
+					lsClass_name.set(i, classes.get(i).getName()+" ("+classes.get(i).getPack()+")");
+					lsClass_name.set(j, classes.get(j).getName()+" ("+classes.get(j).getPack()+")");
 					classes.get(i).setName(classes.get(i).getName()+" ("+classes.get(i).getPack()+")");
 					classes.get(j).setName(classes.get(j).getName()+" ("+classes.get(j).getPack()+")");
 				}

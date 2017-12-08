@@ -65,6 +65,7 @@ class Teacher extends Person implements hello
 {
     protected String school;  
     String rank;
+    Animal p;
     public String getSchool() {
         return this.school;
     }
@@ -84,6 +85,7 @@ class Teacher extends Person implements hello
 }
 class Cau1 {
     int a, b;
+    Teacher t;
     void drawcau2(){
 
     }
@@ -91,6 +93,7 @@ class Cau1 {
 class Developer extends cde.Cau1
 {
     List<String> languages = new ArrayList<String>();
+    cde.Cau1 d;
     public List<String> getLanguage() {
         return this.languages;
     }

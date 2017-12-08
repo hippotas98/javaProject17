@@ -117,7 +117,24 @@ public class Main extends Application {
 				String name =  cls.getPack()+"."+cls.getName();
 				if(name.contains(" ("))
 					name = name.substring(0,name.indexOf(" ("));
-				model.addEdge(name, pName);
+					model.addEdge(name, pName);
+			}
+		}
+		for(ClassADT cls : classes) {
+			cls.hasaFind();
+			List<String> hasaclasses = cls.getHasAClass();
+			if(hasaclasses.size()!=0) {
+				for(String hasaclass : hasaclasses) {
+					String name = cls.getPack()+"."+cls.getName();
+					if(name.contains(" ("))
+						name = name.substring(0, name.indexOf(" ("));
+					String hasaName;
+					if(!hasaclass.contains("."))
+						hasaName = cls.getPack() + "." + hasaclass;
+					else hasaName = hasaclass;
+					//System.out.println(name + " " + hasaName);
+					model.addEdge(name, hasaName);
+				}
 			}
 		}
 		//add interface
